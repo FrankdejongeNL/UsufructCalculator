@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: .NET Test Results
+        path: '**/test-results.trx'
+        reporter: dotnet-trx
+
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Run code analysis
+      run: dotnet build --no-restore --configuration Release /p:EnforceCodeStyleInBuild=true /p:TreatWarningsAsErrors=false
+
+    - name: Check for linting warnings
+      run: |
+        echo "Checking for StyleCop and analyzer warnings..."
+        dotnet build --no-restore --configuration Release 2>&1 | tee build.log
+        if grep -q "warning SA\|warning CS" build.log; then
+          echo "⚠️  Linting warnings found (not failing build):"
+          grep "warning SA\|warning CS" build.log || true
+        else
+          echo "✅ No linting warnings found"
+        fi
+
+  angular-build:
+    name: Angular Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/UsufructCalculator.Web
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: src/UsufructCalculator.Web/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint Angular code
+      run: npm run lint || true
+
+    - name: Build Angular app
+      run: npm run build
+
+    - name: Run Angular tests
+      run: npm test -- --watch=false --browsers=ChromeHeadless
