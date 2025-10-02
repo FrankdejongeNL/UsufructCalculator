@@ -29,7 +29,7 @@ public class UsufructCalculatorApiTests : IClassFixture<WebApplicationFactory<Pr
         var queryString = "?amount=250000&age=65&gender=Male&calculationMethod=EenLeven";
 
         // Act
-        var response = await _client.GetAsync($"/api/usufruct-calculations{queryString}");
+        var response = await _client.GetAsync($"/api/v1/usufruct-calculations{queryString}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -42,7 +42,7 @@ public class UsufructCalculatorApiTests : IClassFixture<WebApplicationFactory<Pr
         var queryString = "?amount=250000&age=65&gender=Male&calculationMethod=EenLeven";
 
         // Act
-        var response = await _client.GetAsync($"/api/usufruct-calculations{queryString}");
+        var response = await _client.GetAsync($"/api/v1/usufruct-calculations{queryString}");
         var result = await response.Content.ReadFromJsonAsync<UsufructResponse>();
 
         // Assert
@@ -58,7 +58,7 @@ public class UsufructCalculatorApiTests : IClassFixture<WebApplicationFactory<Pr
         var queryString = "?amount=250000&age=65&gender=Male";
 
         // Act
-        var response = await clientWithoutKey.GetAsync($"/api/usufruct-calculations{queryString}");
+        var response = await clientWithoutKey.GetAsync($"/api/v1/usufruct-calculations{queryString}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -73,7 +73,7 @@ public class UsufructCalculatorApiTests : IClassFixture<WebApplicationFactory<Pr
         var queryString = "?amount=250000&age=65&gender=Male";
 
         // Act
-        var response = await clientWithInvalidKey.GetAsync($"/api/usufruct-calculations{queryString}");
+        var response = await clientWithInvalidKey.GetAsync($"/api/v1/usufruct-calculations{queryString}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -86,7 +86,7 @@ public class UsufructCalculatorApiTests : IClassFixture<WebApplicationFactory<Pr
         var queryString = "?age=65&gender=Male";
 
         // Act
-        var response = await _client.GetAsync($"/api/usufruct-calculations{queryString}");
+        var response = await _client.GetAsync($"/api/v1/usufruct-calculations{queryString}");
 
         // Assert - Should fail validation due to Amount range requirement
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -99,7 +99,7 @@ public class UsufructCalculatorApiTests : IClassFixture<WebApplicationFactory<Pr
     public async Task GetUsufructCalculation_WithInvalidParameterValues_ReturnsBadRequest(string queryString)
     {
         // Act
-        var response = await _client.GetAsync($"/api/usufruct-calculations{queryString}");
+        var response = await _client.GetAsync($"/api/v1/usufruct-calculations{queryString}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -116,7 +116,7 @@ public class UsufructCalculatorApiTests : IClassFixture<WebApplicationFactory<Pr
         var queryString = $"?amount={amount}&age={age}&gender={gender}";
 
         // Act
-        var response = await _client.GetAsync($"/api/usufruct-calculations{queryString}");
+        var response = await _client.GetAsync($"/api/v1/usufruct-calculations{queryString}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

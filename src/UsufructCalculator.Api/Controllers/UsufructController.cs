@@ -1,25 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
+using UsufructCalculator.Api.Constants;
 using UsufructCalculator.Api.Models;
+using UsufructCalculator.Api.Services;
 
 namespace UsufructCalculator.Api.Controllers;
 
 /// <summary>
-/// Controller for usufruct calculations.
+/// Controller for usufruct calculations (API v1).
 /// </summary>
 [ApiController]
-[Route("api/usufruct-calculations")]
+[Route("api/v1/usufruct-calculations")]
 [Produces("application/json")]
 public class UsufructController : ControllerBase
 {
     private readonly ILogger<UsufructController> _logger;
+    private readonly IUsufructCalculationService _calculationService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UsufructController"/> class.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    public UsufructController(ILogger<UsufructController> logger)
+    /// <param name="calculationService">The usufruct calculation service.</param>
+    public UsufructController(
+        ILogger<UsufructController> logger,
+        IUsufructCalculationService calculationService)
     {
         _logger = logger;
+        _calculationService = calculationService;
     }
 
     /// <summary>
@@ -52,11 +59,7 @@ public class UsufructController : ControllerBase
 
         try
         {
-            // TODO: Implement usufruct calculation logic
-            var response = new UsufructResponse
-            {
-                CalculatedValue = 0,
-            };
+            var response = _calculationService.Calculate(request);
 
             _logger.LogInformation("Usufruct calculation completed successfully");
             return Ok(response);

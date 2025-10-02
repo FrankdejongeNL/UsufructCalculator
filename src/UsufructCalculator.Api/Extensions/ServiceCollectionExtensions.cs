@@ -1,3 +1,6 @@
+using UsufructCalculator.Api.Services;
+using UsufructCalculator.Api.Services.CalculationStrategies;
+
 namespace UsufructCalculator.Api.Extensions;
 
 /// <summary>
@@ -14,6 +17,15 @@ public static class ServiceCollectionExtensions
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
+
+        // Register health checks
+        services.AddHealthChecks();
+
+        // Register calculation strategies
+        services.AddTransient<ICalculationStrategy, EenLevenCalculationStrategy>();
+
+        // Register calculation service
+        services.AddScoped<IUsufructCalculationService, UsufructCalculationService>();
 
         return services;
     }
@@ -52,7 +64,7 @@ public static class ServiceCollectionExtensions
             {
                 Title = "Usufruct Calculator API",
                 Version = "v1",
-                Description = "API for calculating usufruct values",
+                Description = "API for calculating usufruct values. Version 1 endpoints are located at /api/v1/...",
             });
 
             // Include XML comments
