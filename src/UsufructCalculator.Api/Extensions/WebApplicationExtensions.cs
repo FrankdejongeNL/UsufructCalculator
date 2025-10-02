@@ -29,6 +29,9 @@ public static class WebApplicationExtensions
 
         app.MapControllers();
 
+        // Map health check endpoint (no authentication required)
+        app.MapHealthChecks("/health");
+
         return app;
     }
 }

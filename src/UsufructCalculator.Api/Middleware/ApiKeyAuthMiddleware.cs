@@ -7,17 +7,27 @@ public class ApiKeyAuthMiddleware
 {
     private const string ApiKeyHeaderName = "X-API-Key";
     private readonly RequestDelegate _next;
-    private readonly IConfiguration _configuration;
+    private readonly string _apiKey;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ApiKeyAuthMiddleware"/> class.
     /// </summary>
     /// <param name="next">The next middleware in the pipeline.</param>
     /// <param name="configuration">The application configuration containing the API key.</param>
+    /// <exception cref="InvalidOperationException">Thrown when ApiKey is not configured or is empty.</exception>
     public ApiKeyAuthMiddleware(RequestDelegate next, IConfiguration configuration)
     {
         _next = next;
-        _configuration = configuration;
+
+        _apiKey = configuration.GetValue<string>("ApiKey")
+            ?? throw new InvalidOperationException(
+                "ApiKey must be configured in appsettings.json. Add a non-empty 'ApiKey' value to your configuration.");
+
+        if (string.IsNullOrWhiteSpace(_apiKey))
+        {
+            throw new InvalidOperationException(
+                "ApiKey cannot be empty. Provide a valid API key in appsettings.json.");
+        }
     }
 
     /// <summary>
@@ -27,8 +37,9 @@ public class ApiKeyAuthMiddleware
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        // Skip authentication for Swagger in development
-        if (context.Request.Path.StartsWithSegments("/swagger"))
+        // Skip authentication for Swagger in development and health checks
+        if (context.Request.Path.StartsWithSegments("/swagger") ||
+            context.Request.Path.StartsWithSegments("/health"))
         {
             await _next(context);
             return;
@@ -41,9 +52,7 @@ public class ApiKeyAuthMiddleware
             return;
         }
 
-        var apiKey = _configuration.GetValue<string>("ApiKey");
-
-        if (string.IsNullOrWhiteSpace(apiKey) || !apiKey.Equals(extractedApiKey))
+        if (!string.Equals(_apiKey, extractedApiKey, StringComparison.Ordinal))
         {
             context.Response.StatusCode = 401;
             await context.Response.WriteAsync("Invalid API Key");
