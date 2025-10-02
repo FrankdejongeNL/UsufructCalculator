@@ -1,0 +1,6 @@
+@UsufructCalculator.Api_HostAddress = http://localhost:5184
+
+GET {{UsufructCalculator.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

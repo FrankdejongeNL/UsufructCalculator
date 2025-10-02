@@ -1,0 +1,30 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.csproj.user
+.vs/
+*.dll
+*.exe
+*.pdb
+
+# Angular
+node_modules/
+dist/
+.angular/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test Results
+TestResults/
+*.trx
+coverage/
