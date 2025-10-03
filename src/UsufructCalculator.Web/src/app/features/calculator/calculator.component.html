@@ -1,0 +1,105 @@
+<main>
+  <div class="container">
+    <h1>{{ title() }}</h1>
+
+    <form>
+      <div class="form-group">
+        <label for="propertyValue">Eigendom waarde (€)</label>
+        <input
+          type="number"
+          id="propertyValue"
+          name="propertyValue"
+          placeholder="Eigendom waarde in hele euro's"
+          min="1"
+          step="1"
+          [value]="propertyValue()"
+          (input)="propertyValue.set($any($event.target).value)"
+          (blur)="validatePropertyValue()"
+        />
+        @if (propertyValueError()) {
+          <span class="error">{{ propertyValueError() }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="age">Leeftijd</label>
+        <input
+          type="number"
+          id="age"
+          name="age"
+          placeholder="Leeftijd"
+          min="0"
+          max="120"
+          [value]="age()"
+          (input)="age.set($any($event.target).value)"
+          (blur)="validateAge()"
+        />
+        @if (ageError()) {
+          <span class="error">{{ ageError() }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Geslacht</label>
+        <select
+          id="gender"
+          name="gender"
+          [value]="gender()"
+          (change)="gender.set($any($event.target).value); genderError.set('')"
+        >
+          <option value="" disabled selected>Selecteer geslacht</option>
+          @for (genderOption of genders; track genderOption.value) {
+            <option [value]="genderOption.value">{{ genderOption.label }}</option>
+          }
+        </select>
+        @if (genderError()) {
+          <span class="error">{{ genderError() }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="calculationMethod">Bereken methode</label>
+        <select
+          id="calculationMethod"
+          name="calculationMethod"
+          [value]="calculationMethod()"
+          (change)="calculationMethod.set(+$any($event.target).value)"
+        >
+          @for (method of calculationMethods; track method.value) {
+            <option [value]="method.value">{{ method.label }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="button" class="calculate-button" (click)="calculate()" [disabled]="isLoading()">
+        @if (isLoading()) {
+          Berekenen...
+        } @else {
+          Berekenen
+        }
+      </button>
+    </form>
+
+    @if (apiError()) {
+      <div class="api-error">{{ apiError() }}</div>
+    }
+
+    @if (calculatedValue() !== null) {
+      <div class="results">
+        <h2>Resultaat</h2>
+        <div class="result-row">
+          <span class="result-label">Eigendom waarde:</span>
+          <span class="result-value">€{{ propertyValue() }}</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Factor:</span>
+          <span class="result-value">{{ factor() }}</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Vruchtgebruik waarde:</span>
+          <span class="result-value">€{{ calculatedValue()?.toFixed(2) }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</main>
