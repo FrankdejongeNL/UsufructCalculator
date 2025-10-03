@@ -74,9 +74,9 @@ dotnet run --project src/UsufructCalculator.Api/UsufructCalculator.Api.csproj
 ```
 
 The API will start at:
-- **HTTPS:** https://localhost:5001
-- **HTTP:** http://localhost:5000
-- **Swagger UI:** https://localhost:5001/swagger (development only)
+- **HTTPS:** https://localhost:5184
+- **HTTP:** http://localhost:5184
+- **Swagger UI:** https://localhost:5184/swagger (development only)
 
 ### Frontend (Angular)
 
@@ -329,7 +329,7 @@ The project maintains high code coverage:
 ### API Documentation
 
 When running in development mode, access the Swagger UI at:
-- https://localhost:5001/swagger
+- https://localhost:5184/swagger
 
 ### Contributing
 
