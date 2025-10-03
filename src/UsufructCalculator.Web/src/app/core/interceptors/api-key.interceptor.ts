@@ -1,5 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export const apiKeyInterceptor: HttpInterceptorFn = (req, next) => {
   // Only add API key to requests going to our API
