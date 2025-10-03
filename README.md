@@ -52,6 +52,7 @@ UsufructCalculator/
 | @angular/core | 20.3.2 | Angular framework |
 | @angular/forms | 20.3.2 | Form handling |
 | @angular/ssr | 20.3.3 | Server-side rendering |
+| @types/node | 20.19.0 | Node.js type definitions |
 | rxjs | 7.8.0 | Reactive programming |
 | angular-eslint | 20.3.0 | Code linting |
 
