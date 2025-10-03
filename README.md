@@ -108,7 +108,7 @@ The API requires an API key for authentication. Configure it in:
 ```typescript
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:5001/api',
+  apiUrl: 'https://localhost:5184/api',
   apiKey: 'dev-api-key-replace-in-production'
 };
 ```
