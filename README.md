@@ -124,8 +124,11 @@ dotnet test
 # Run specific test project
 dotnet test tests/UsufructCalculator.Api.Tests/UsufructCalculator.Api.Tests.csproj
 
-# Run with code coverage
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+# Run with code coverage (windows)
+'./generate-coverage.ps1' 
+
+# Run with code coverage (Mac/Linux)
+'./generate-coverage.sh'
 ```
 
 ### Frontend Tests
