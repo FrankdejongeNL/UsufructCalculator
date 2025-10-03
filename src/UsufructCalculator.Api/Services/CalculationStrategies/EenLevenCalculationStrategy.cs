@@ -28,7 +28,9 @@ public class EenLevenCalculationStrategy : ICalculationStrategy
         return new UsufructResult
         {
             Factor = factor,
-            CalculatedValue = amount * CalculationValue * factor,
+
+            // For tax values we round the number up in favor of the user.
+            CalculatedValue = Math.Ceiling(amount * CalculationValue * factor),
         };
     }
 
