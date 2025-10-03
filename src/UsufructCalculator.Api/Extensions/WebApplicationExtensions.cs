@@ -21,7 +21,12 @@ public static class WebApplicationExtensions
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
+        // Don't do https redirection for development environments.
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
+
         app.UseCors("AllowAngularApp");
 
         // Add API Key authentication middleware

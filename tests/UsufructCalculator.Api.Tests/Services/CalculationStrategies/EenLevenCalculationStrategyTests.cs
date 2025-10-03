@@ -113,7 +113,7 @@ public class EenLevenCalculationStrategyTests
     }
 
     [Theory]
-    [InlineData(1, 20, Gender.Male, 22, 0.88)] // Minimum amount
+    [InlineData(1, 20, Gender.Male, 22, 1)] // Minimum amount
     [InlineData(1000000, 20, Gender.Male, 22, 880000)] // Large amount
     public void Calculate_WithVariousAmounts_ReturnsCorrectCalculation(
         int amount,
@@ -202,7 +202,7 @@ public class EenLevenCalculationStrategyTests
     }
 
     [Fact]
-    public void Calculate_AssignmentValue()
+    public void Calculate_AssignmentValue_roundedUp()
     {
         // Arrange
         int amount = 1234;
@@ -215,6 +215,6 @@ public class EenLevenCalculationStrategyTests
 
         //assert
         result.Factor.Should().Be(expectedFactor);
-        result.CalculatedValue.Should().BeApproximately(1037M, 1M);
+        result.CalculatedValue.Should().Be(1037M);
     }
 }
